@@ -4,7 +4,7 @@ from bs4 import BeautifulSoup
 
 def convert(code):
 	# code += "\n"
-	code = "\n" + code + "\n"
+	code = "\n# " + code + "\n"
 	converted = ""
 
 	bold = False
@@ -14,10 +14,12 @@ def convert(code):
 	link = {"isImage": False, "start": 0, "end": 0, "url": "", "titleStart": 0, "titleEnd": 0, "title": "", "urlStart": 0, "urlEnd": 0, "text": ""}
 	# lists = []
 
-	i=0
+	i=1
 	while i < len(code) - 1:
 		if not code[i-1] == "\\":
 			# if code[i-1] + code[i] + code[i+1] == '```':
+			if code[i] == "\n":
+				converted += "<br/>"
 			if within(i, len(code), 3) and code[i] + code[i+1] + code[i+2] == '```':
 				i+=2
 				print ("Big Code")
@@ -31,7 +33,7 @@ def convert(code):
 					if code[i] + code[i+1] + code[i+2] == "---":
 						i+=3
 						converted += "<hr>"
-				if code[i] == "_":
+				if (code[i] == "_" and not code[i+1] == "_") or (code[i] == "*" and not code[i+1] == "*"):
 					italic = not italic
 					i+=1
 					if not italic:
@@ -51,7 +53,7 @@ def convert(code):
 						converted += "</code></span>"
 					inlineCode = False
 
-				if code[i] + code[i + 1] == "**":
+				if code[i] + code[i + 1] == "**" or code[i] + code[i+1] == "__":
 					i+=1
 					bold = not bold
 					if not bold:
@@ -70,7 +72,7 @@ def convert(code):
 						i += len(getLine(code, i))
 
 					if getLine(code, i).split()[0][0] == ">":
-						converted += "<br><span style='color: grey; background-color: grey;'>|</span>" + (" " + getLine(code, i)[1:].strip())
+						converted += "<br><span style='color: grey; background-color: grey;'>|</span>" + (" " + convertBasic(getLine(code, i)[1:].strip()))
 						i += (len(getLine(code, i)))
 
 					if code[i] == "[":
@@ -112,6 +114,47 @@ def convert(code):
 		i+=1
 	return "<html>" + converted + "</html>"
 
+def convertBasic(code):
+	converted = ""
+	i=1
+	bold = False
+	italic = False
+	inlineCode = False
+
+	while i < len(code) - 1:
+		if (code[i] == "_" and not code[i+1] == "_") or (code[i] == "*" and not code[i+1] == "*"):
+			italic = not italic
+			if not italic:
+				converted += "</i>"
+			else:
+				converted += "<i>"
+		elif code[i] == "`" and not code[i+1] == "`":
+			inlineCode = not inlineCode
+			i+=1
+			if not inlineCode:
+				converted += "</code></span>"
+			else:
+				converted += "<span style='color: maroon;'><code>"
+
+		elif code[i] == "\n":
+			if inlineCode:
+				converted += "</code></span>"
+			inlineCode = False
+
+		elif code[i] + code[i + 1] == "**" or code[i] + code[i+1] == "__":
+			i+=1
+			bold = not bold
+			if not bold:
+				converted += "</b>"
+			else:
+				converted += "<b>"
+		else:
+			converted += code[i]
+
+		i+=1
+	print (code)
+	return converted
+
 def getLine(code, i):
 	return code[(code[:i].rfind("\n")+1):i + code[i + 1:].find("\n")+1]
 
@@ -138,6 +181,8 @@ def wrapMatches(str, match):
 		# 	newStr += str[lastFindIndex+len(match):str.find(match, lastFindIndex+1)]
 
 		# print (re.findall(r">.*?<", str))
+
+
 
 		return newStr
 	else:
