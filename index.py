@@ -14,7 +14,11 @@ class MDRenderWindow(wx.Frame):
 
         self.InitUI()
         if defaultFile:
-            self.showMD(convert(open(defaultFile).read()))
+            try:
+                self.showMD(convert(open(defaultFile).read()))
+            except:
+                wx.MessageBox('The file wasn\'t found', 'Error',
+                    wx.OK | wx.ICON_ERROR)
 
     def InitUI(self):
 

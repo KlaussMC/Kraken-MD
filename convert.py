@@ -2,9 +2,11 @@ import re
 from link import *
 from bs4 import BeautifulSoup
 
+from basicConverter import *
+
 def convert(code):
 	# code += "\n"
-	code = "\n# " + code + "\n"
+	code = "\n" + code + "\n"
 	converted = ""
 
 	bold = False
@@ -17,20 +19,19 @@ def convert(code):
 	i=1
 	while i < len(code) - 1:
 		if not code[i-1] == "\\":
-			# if code[i-1] + code[i] + code[i+1] == '```':
 			if code[i] == "\n":
 				converted += "<br/>"
 			if within(i, len(code), 3) and code[i] + code[i+1] + code[i+2] == '```':
 				i+=2
-				print ("Big Code")
+				# print ("Big Code")
 				bigCode = not bigCode
 				if bigCode:
-					converted += "<div'><code>"
+					converted += "<br/><div style='background-color: grey;'><code>"
 				else:
 					converted += "</code></div>"
 			else:
 				if i < len(code)-4:
-					if code[i] + code[i+1] + code[i+2] == "---":
+					if code[i] + code[i+1] + code[i+2] == "---" or code[i] + code[i+1] + code[i+2] == "***":
 						i+=3
 						converted += "<hr>"
 				if (code[i] == "_" and not code[i+1] == "_") or (code[i] == "*" and not code[i+1] == "*"):
@@ -64,16 +65,30 @@ def convert(code):
 				else:
 					if getLine(code, i).split()[0][0] == "#":
 						headernum = getLine(code, i).split()[0].count("#")
-						converted += "<h" + str(headernum) + ">" + getLine(code, i)[headernum-1:][headernum:] + "</h" + str(headernum) + ">"
+						tmp = "<h" + str(headernum) + ">" + getLine(code, i)[headernum-1:][headernum:] + "</h" + str(headernum) + ">"
+
+						# if i <= len(getLine(code, i)) and headernum == 1:
+						# 	converted = tmp[:5] + tmp[6:]
+						# else:
+						converted += tmp
 						#Bug: if a header 1 is the very first item in the list, the hashtag will show up
 
-						print (headernum, getLine(code, i))
+						# print (headernum, getLine(code, i))
 
 						i += len(getLine(code, i))
 
 					if getLine(code, i).split()[0][0] == ">":
+						# tmp =
 						converted += "<br><span style='color: grey; background-color: grey;'>|</span>" + (" " + convertBasic(getLine(code, i)[1:].strip()))
 						i += (len(getLine(code, i)))
+
+					if getLine(code, i).split()[0][0:2] == "-" or getLine(code, i).split()[0][0:2] == "*":
+						tmp = convertBasic(getLine(code, i).strip())
+
+						if getLine(code, i).split()[0][0:2] == "*":
+							converted = converted[:-3]
+						converted += "<br><ul><li>" + (" " + tmp ) + "</li></ul>"
+						i += len(getLine(code, i))
 
 					if code[i] == "[":
 						link["start"] = i
@@ -111,49 +126,12 @@ def convert(code):
 							link = {"start": 0, "end": 0, "url": "", "titleStart": 0, "titleEnd": 0, "title": "", "urlStart": 0, "urlEnd": 0, "text": ""}
 
 					converted += code[i]
-		i+=1
-	return "<html>" + converted + "</html>"
-
-def convertBasic(code):
-	converted = ""
-	i=1
-	bold = False
-	italic = False
-	inlineCode = False
-
-	while i < len(code) - 1:
-		if (code[i] == "_" and not code[i+1] == "_") or (code[i] == "*" and not code[i+1] == "*"):
-			italic = not italic
-			if not italic:
-				converted += "</i>"
-			else:
-				converted += "<i>"
-		elif code[i] == "`" and not code[i+1] == "`":
-			inlineCode = not inlineCode
-			i+=1
-			if not inlineCode:
-				converted += "</code></span>"
-			else:
-				converted += "<span style='color: maroon;'><code>"
-
-		elif code[i] == "\n":
-			if inlineCode:
-				converted += "</code></span>"
-			inlineCode = False
-
-		elif code[i] + code[i + 1] == "**" or code[i] + code[i+1] == "__":
-			i+=1
-			bold = not bold
-			if not bold:
-				converted += "</b>"
-			else:
-				converted += "<b>"
 		else:
+			converted = converted[:-1]
 			converted += code[i]
 
 		i+=1
-	print (code)
-	return converted
+	return "<html>" + converted + "</html>"
 
 def getLine(code, i):
 	return code[(code[:i].rfind("\n")+1):i + code[i + 1:].find("\n")+1]

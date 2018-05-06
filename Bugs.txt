@@ -1,0 +1,6 @@
+rendered code doesn't display properly within headers
+hyperlinks do not work when preceded by Blockquotes
+hyperlinks do not open webbrowser
+sometimes blockquotes trim first and last char
+escaping characters shows backslashes when within header
+code can be formatted (bold, italic)
