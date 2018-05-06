@@ -8,3 +8,8 @@ View markdown on your computer with ease, launch Kraken MD from command line or 
 To begin, open Kraken MD and go to `File > Open` or press CTRL+O and select a `.md` file. Your file will be displayed in the window.
 
 You can also open a file immediately via the command line. Simply enter `python index.py <filepath>` where `<filepath>` is an absolute or relative path to the file.
+
+To run an unbuilt version, you must have installed:
+- wxPython `($ pip install -U wxPython)`
+- beautifulSoup `($ pip install beautifulsoup4)`
+- [python 3.6+](https://www.python.org/ftp/python/3.6.5/python-3.6.5.exe)
