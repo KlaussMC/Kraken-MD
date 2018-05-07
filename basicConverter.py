@@ -1,9 +1,12 @@
+from link import *
+
 def convertBasic(code):
 	converted = ""
 	i=1
 	bold = False
 	italic = False
 	inlineCode = False
+	link = {"isImage": False, "start": 0, "end": 0, "url": "", "titleStart": 0, "titleEnd": 0, "title": "", "urlStart": 0, "urlEnd": 0, "text": ""}
 
 	while i < len(code) - 1:
 		if (code[i] != '\\'):
@@ -15,7 +18,7 @@ def convertBasic(code):
 					converted += "<i>"
 			elif code[i] == "`" and not code[i+1] == "`":
 				inlineCode = not inlineCode
-				i+=1
+				# i+=1
 				if not inlineCode:
 					converted += "</code></span>"
 				else:
@@ -33,12 +36,16 @@ def convertBasic(code):
 					converted += "</b>"
 				else:
 					converted += "<b>"
+
 			else:
-				converted += code[i]
+				if code[i] == "\n":
+					converted += "<br/>"
+				else:
+					converted += code[i]
+
 		else:
 			converted = converted[:-1]
 			converted += code[i]
 
 		i+=1
-	# print (code)
 	return converted

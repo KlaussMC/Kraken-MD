@@ -9,7 +9,7 @@ I need to write some text that my renderer can interpret. I need the text to spa
 it seems to work, so **_WOW!!!_**
 <br>
 `I was mistaken, monospace does work`
-> A Blockquote ** Another one bites the dust**
+> Blockquote ** Another one bites the dust.**
 
 ![Image](res/jojo5.gif)
 

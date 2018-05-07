@@ -3,6 +3,7 @@ from link import *
 from bs4 import BeautifulSoup
 
 from basicConverter import *
+from clean import *
 
 def convert(code):
 	# code += "\n"
@@ -66,20 +67,13 @@ def convert(code):
 					if getLine(code, i).split()[0][0] == "#":
 						headernum = getLine(code, i).split()[0].count("#")
 						tmp = "<h" + str(headernum) + ">" + getLine(code, i)[headernum-1:][headernum:] + "</h" + str(headernum) + ">"
-
-						# if i <= len(getLine(code, i)) and headernum == 1:
-						# 	converted = tmp[:5] + tmp[6:]
-						# else:
 						converted += tmp
-						#Bug: if a header 1 is the very first item in the list, the hashtag will show up
-
-						# print (headernum, getLine(code, i))
 
 						i += len(getLine(code, i))
 
 					if getLine(code, i).split()[0][0] == ">":
 						# tmp =
-						converted += "<br><span style='color: grey; background-color: grey;'>|</span>" + (" " + convertBasic(getLine(code, i)[1:].strip()))
+						converted += "<br><span style='color: grey; background-color: grey;'>|</span>" + (" " + convertBasic(getLine(code, i).strip()))
 						i += (len(getLine(code, i)))
 
 					if getLine(code, i).split()[0][0:2] == "-" or getLine(code, i).split()[0][0:2] == "*":
@@ -87,7 +81,9 @@ def convert(code):
 
 						if getLine(code, i).split()[0][0:2] == "*":
 							converted = converted[:-3]
-						converted += "<br><ul><li>" + (" " + tmp ) + "</li></ul>"
+
+						converted += "<ul><li>" + (" " + tmp ) + "</li></ul>"
+						# print (converted)
 						i += len(getLine(code, i))
 
 					if code[i] == "[":
@@ -131,7 +127,7 @@ def convert(code):
 			converted += code[i]
 
 		i+=1
-	return "<html>" + converted + "</html>"
+	return "<html>" + clean(converted) + "</html>"
 
 def getLine(code, i):
 	return code[(code[:i].rfind("\n")+1):i + code[i + 1:].find("\n")+1]

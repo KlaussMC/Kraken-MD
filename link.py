@@ -7,7 +7,7 @@ def processLink(link):
         str += ">"
         str += link["text"]
         str += "</a>"
-        return str
+        return " " + str
     else: #Creates Image (supposed to, anyway)
         # print (link)
         str = "<img src=\""

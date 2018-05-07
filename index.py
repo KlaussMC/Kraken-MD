@@ -185,6 +185,7 @@ class MDRenderWindow(wx.Frame):
         self.panel.SetSizer(vbox)
 
     def showMD(self, code):
+        print (code)
         self.pageContent = trim.trimHTML(code)
         self.code = code
         self.htmlwin.SetPage(code)
