@@ -65,8 +65,9 @@ def convert(code):
 
 				else:
 					if getLine(code, i).split()[0][0] == "#":
+
 						headernum = getLine(code, i).split()[0].count("#")
-						tmp = "<h" + str(headernum) + ">" + getLine(code, i)[headernum-1:][headernum:] + "</h" + str(headernum) + ">"
+						tmp = "<h" + str(headernum) + ">" + getLine(code, i)[headernum:].strip() + "</h" + str(headernum) + ">"
 						converted += tmp
 
 						i += len(getLine(code, i))

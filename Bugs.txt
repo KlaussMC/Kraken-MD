@@ -4,3 +4,4 @@ hyperlinks do not open webbrowser
 sometimes blockquotes trim first and last char
 escaping characters shows backslashes when within header
 code can be formatted (bold, italic)
+headers 4 and 6 are italicised and thinned - wxPython's fault.

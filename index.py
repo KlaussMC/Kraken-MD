@@ -3,7 +3,7 @@ import wx.html as html
 import ctypes
 from convert import *
 import sys
-import webbrowser
+# import webbrowser
 import re
 import trim
 
@@ -185,10 +185,13 @@ class MDRenderWindow(wx.Frame):
         self.panel.SetSizer(vbox)
 
     def showMD(self, code):
-        print (code)
+        # code = "<html><h1>Hi</h1><h2>Hi</h2><h3>Hi</h3><h4>Hi</h4><h5>Hi</h5><h6>Hi</h6></html>"
+        # print(code)
         self.pageContent = trim.trimHTML(code)
         self.code = code
+        # self.code = "<html><h1>Hi</h1><h2>Hi</h2><h3>Hi</h3><h4>Hi</h4><h5>Hi</h5><h6>Hi</h6></html>"
         self.htmlwin.SetPage(code)
+
     def showMDFind(self, code):
         self.htmlwin.SetPage(code)
 
